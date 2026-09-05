@@ -21,7 +21,7 @@ public class AccountStore {
 
     public Optional<Account> findAccount(UUID id) {
         if (id == null) {
-            throw new IllegalArgumentException("Invalid id");
+            throw new IllegalArgumentException("Id is required");
         }
         return Optional.ofNullable(accounts.get(id));
     }

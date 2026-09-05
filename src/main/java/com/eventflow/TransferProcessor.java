@@ -1,5 +1,6 @@
 package com.eventflow;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class TransferProcessor
@@ -18,8 +19,10 @@ public class TransferProcessor
         if (payload == null) {
             throw new IllegalArgumentException("Payload is required");
         }
+
         Optional<Account> sourceAccount = accountStore.findAccount(payload.getSourceAccountId());
         Optional<Account> destinationAccount = accountStore.findAccount(payload.getDestinationAccountId());
+
         if (sourceAccount.isEmpty() || destinationAccount.isEmpty()) {
             return new TransferResult(TransferOutcome.REJECTED, TransferRejectionReason.ACCOUNT_NOT_FOUND);
         }
@@ -42,8 +45,16 @@ public class TransferProcessor
             return new TransferResult(TransferOutcome.REJECTED, TransferRejectionReason.INSUFFICIENT_FUNDS);
         }
 
+        BigDecimal sourceBalance = source.getBalance();
+
         source.debit(payload.getAmount());
-        destination.credit(payload.getAmount());
+
+        try {
+            destination.credit(payload.getAmount());
+        } catch (RuntimeException e) {
+            source.restoreBalance(sourceBalance);
+            throw e;
+        }
 
         return new TransferResult(TransferOutcome.APPROVED, null);
 

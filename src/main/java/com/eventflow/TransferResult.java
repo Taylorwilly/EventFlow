@@ -2,7 +2,7 @@ package com.eventflow;
 
 import java.util.Optional;
 
-public class TransferResult {
+public class TransferResult implements EventResult {
     private final TransferOutcome outcome;
     private final TransferRejectionReason rejectionReason;
 

@@ -58,7 +58,7 @@ public class Account {
             throw new IllegalStateException("The account is frozen");
         }
         if (amount == null) {
-            throw new IllegalArgumentException("Invalid amount");
+            throw new IllegalArgumentException("Amount is required");
         }
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount should be greater than zero");
@@ -78,6 +78,10 @@ public class Account {
             throw new IllegalArgumentException("The amount should be greater than zero");
         }
         this.balance = this.balance.add(amount);
+    }
+
+    void restoreBalance(BigDecimal previousBalance) {
+        this.balance = previousBalance;
     }
 
     public void freeze() {
