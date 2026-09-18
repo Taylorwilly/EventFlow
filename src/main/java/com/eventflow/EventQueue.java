@@ -1,16 +1,15 @@
 package com.eventflow;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class EventQueue {
-    private final Queue<Event> events = new ArrayDeque<>();
+    private final ArrayBlockingQueue<Event> events = new ArrayBlockingQueue<>(10, false);
 
-    public void addEvent(Event event) {
+    public boolean addEvent(Event event) {
         if (event == null) {
             throw new IllegalArgumentException("Event must not be null");
         }
-        events.offer(event);
+        return events.offer(event);
     }
 
     public Event getNextEvent() {

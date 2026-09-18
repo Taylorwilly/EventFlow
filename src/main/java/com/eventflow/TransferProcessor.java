@@ -23,7 +23,7 @@ public class TransferProcessor
         Optional<Account> sourceAccount = accountStore.findAccount(payload.getSourceAccountId());
         Optional<Account> destinationAccount = accountStore.findAccount(payload.getDestinationAccountId());
 
-        if (sourceAccount.isEmpty() || destinationAccount.isEmpty()) {
+        if (!sourceAccount.isPresent() || !destinationAccount.isPresent()) {
             return new TransferResult(TransferOutcome.REJECTED, TransferRejectionReason.ACCOUNT_NOT_FOUND);
         }
         Account source = sourceAccount.get();
